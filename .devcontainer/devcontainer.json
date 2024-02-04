@@ -1,0 +1,35 @@
+{
+	"name": "repostat-action",
+	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
+	"features": {
+		"ghcr.io/devcontainers-contrib/features/act:1": {},
+		"ghcr.io/devcontainers-contrib/features/actionlint:1": {}
+	},
+	"customizations": {
+		"vscode": {
+			"settings": {},
+			"extensions": [
+				"bradlc.vscode-tailwindcss",
+				"csstools.postcss",
+				"davidanson.vscode-markdownlint",
+				"dbaeumer.vscode-eslint",
+				"eamodio.gitlens",
+				"esbenp.prettier-vscode",
+				"github.copilot",
+				"github.vscode-github-actions",
+				"github.vscode-pull-request-github",
+				"lightyen.tailwindcss-intellisense-twin",
+				"mads-hartmann.bash-ide-vscode",
+				"meganrogge.template-string-converter",
+				"planbcoding.vscode-react-refactor",
+				"prisma.prisma",
+				"stuart.unique-window-colors",
+				"styled-components.vscode-styled-components",
+				"statelyai.stately-vscode",
+				"usernamehw.errorlens",
+				"vscode-icons-team.vscode-icons"
+			]
+		}
+	},
+	"postCreateCommand": "npm install"
+}
