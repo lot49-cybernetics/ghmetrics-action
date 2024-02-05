@@ -6,15 +6,16 @@ import { exec } from 'child_process';
  */
 export async function install(version: string = 'latest', source: string = 'pypi'): Promise<string> {
   return new Promise(resolve => {
+    let pip_cmd: string = "pip3 install --user --quiet"
     let install_cmd: string;
     if (source === 'github') {
       let version_tag: string = '';
       if (version !== 'latest') {
         version_tag = `@${version}`;
       }
-      install_cmd = `pip3 install git+https://github.com/vifactor/repostat${version_tag}`;
+      install_cmd = `${pip_cmd} git+https://github.com/vifactor/repostat${version_tag}`;
     } else if (source === 'pypi') {
-      install_cmd = `pip3 install repostat${version !== 'latest' ? '==' + version : ''}`;
+      install_cmd = `${pip_cmd} repostat${version !== 'latest' ? '==' + version : ''}`;
     } else {
       throw new Error('Invalid source')
     }
@@ -27,7 +28,11 @@ export async function install(version: string = 'latest', source: string = 'pypi
           console.error(`Error installing package: ${stderr}`);
           return;
       }
-      console.log(`Package installed successfully: ${stdout}`);
+      if (stdout) {
+        console.warn(`Package installed (unexpected output in quiet mode): ${stdout}`);
+      } else {
+        console.log(`Package installed successfully`);
+      }
   });
   })
 }
