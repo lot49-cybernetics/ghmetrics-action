@@ -2748,7 +2748,7 @@ async function install(version = 'latest', source = 'pypi') {
         }
         else if (source === 'pypi') {
             let version_tag = ``;
-            if (version === 'latest') {
+            if (version !== 'latest') {
                 version_tag = `==${version}`;
             }
             install_cmd = `${pip_cmd} repostat${version_tag}`;
