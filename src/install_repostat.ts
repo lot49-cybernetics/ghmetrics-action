@@ -18,17 +18,17 @@ export async function install(
       }
       install_cmd = `${pip_cmd} git+https://github.com/vifactor/repostat${version_tag}`
     } else if (source === 'pypi') {
-      install_cmd = `${pip_cmd} repostat${version !== 'latest' ? '==' + version : ''}`
+      install_cmd = `${pip_cmd} repostat${version !== 'latest' ? `==${version}` : ''}`
     } else {
       throw new Error('Invalid source')
     }
     exec(install_cmd, (error, stdout, stderr) => {
       if (error) {
-        reject(`Error installing package: ${error.message}`)
+        reject(new Error(`Error installing package: ${error.message}`))
         return
       }
       if (stderr) {
-        reject(`Error installing package: ${stderr}`)
+        reject(new Error(`Error installing package: ${stderr}`))
         return
       }
       if (stdout) {
