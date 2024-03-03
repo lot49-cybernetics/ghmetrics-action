@@ -10,15 +10,20 @@ export async function install(
 ): Promise<string> {
   return new Promise((resolve, reject) => {
     const pip_cmd = 'pip3 install --user --quiet'
+    const git_repo = 'https://github.com/vifactor/repostat'
     let install_cmd: string
     if (source === 'github') {
       let version_tag = ''
       if (version !== 'latest') {
         version_tag = `@${version}`
       }
-      install_cmd = `${pip_cmd} git+https://github.com/vifactor/repostat${version_tag}`
+      install_cmd = `${pip_cmd} git+${git_repo}${version_tag}`
     } else if (source === 'pypi') {
-      install_cmd = `${pip_cmd} repostat${version !== 'latest' ? `==${version}` : ''}`
+      let version_tag = ``
+      if (version !== 'latest') {
+        version_tag = `==${version}`
+      }
+      install_cmd = `${pip_cmd} repostat${version_tag}`
     } else {
       throw new Error('Invalid source')
     }

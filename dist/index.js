@@ -2722,6 +2722,61 @@ exports["default"] = _default;
 
 /***/ }),
 
+/***/ 77:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.install = void 0;
+const child_process_1 = __nccwpck_require__(81);
+/**
+ * Install repostat from its Git repository.
+ * @returns {Promise<string>} Resolves with 'done!' after the wait is over.
+ */
+async function install(version = 'latest', source = 'pypi') {
+    return new Promise((resolve, reject) => {
+        const pip_cmd = 'pip3 install --user --quiet';
+        const git_repo = 'https://github.com/vifactor/repostat';
+        let install_cmd;
+        if (source === 'github') {
+            let version_tag = '';
+            if (version !== 'latest') {
+                version_tag = `@${version}`;
+            }
+            install_cmd = `${pip_cmd} git+${git_repo}${version_tag}`;
+        }
+        else if (source === 'pypi') {
+            let version_tag = ``;
+            if (version !== 'latest') {
+                version_tag = `==${version}`;
+            }
+            install_cmd = `${pip_cmd} repostat${version_tag}`;
+        }
+        else {
+            throw new Error('Invalid source');
+        }
+        (0, child_process_1.exec)(install_cmd, (error, stdout, stderr) => {
+            if (error) {
+                reject(new Error(`Error installing package: ${error.message}`));
+                return;
+            }
+            if (stderr) {
+                reject(new Error(`Error installing package: ${stderr}`));
+                return;
+            }
+            if (stdout) {
+                console.warn(`Package installed (unexpected output in quiet mode): ${stdout}`);
+            }
+            resolve(`Package installed successfully`);
+        });
+    });
+}
+exports.install = install;
+
+
+/***/ }),
+
 /***/ 399:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -2753,7 +2808,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const core = __importStar(__nccwpck_require__(186));
-const wait_1 = __nccwpck_require__(259);
+const install_repostat_1 = __nccwpck_require__(77);
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -2765,7 +2820,7 @@ async function run() {
         core.debug(`Waiting ${ms} milliseconds ...`);
         // Log the current timestamp, wait, then log the new timestamp
         core.debug(new Date().toTimeString());
-        await (0, wait_1.wait)(parseInt(ms, 10));
+        await (0, install_repostat_1.install)();
         core.debug(new Date().toTimeString());
         // Set outputs for other workflow steps to use
         core.setOutput('time', new Date().toTimeString());
@@ -2781,36 +2836,19 @@ exports.run = run;
 
 /***/ }),
 
-/***/ 259:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.wait = void 0;
-/**
- * Wait for a number of milliseconds.
- * @param milliseconds The number of milliseconds to wait.
- * @returns {Promise<string>} Resolves with 'done!' after the wait is over.
- */
-async function wait(milliseconds) {
-    return new Promise(resolve => {
-        if (isNaN(milliseconds)) {
-            throw new Error('milliseconds not a number');
-        }
-        setTimeout(() => resolve('done!'), milliseconds);
-    });
-}
-exports.wait = wait;
-
-
-/***/ }),
-
 /***/ 491:
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("assert");
+
+/***/ }),
+
+/***/ 81:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("child_process");
 
 /***/ }),
 
